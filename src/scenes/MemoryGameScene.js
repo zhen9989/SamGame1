@@ -78,27 +78,29 @@ export default class MemoryGameScene extends Phaser.Scene {
     this.countdownTimer = 40;
     this.timedEvent = undefined;
     this.winCondition = false;
+    this.backsound = undefined;
   }
 
   preload() {
-    this.load.image("bg", "images/bg2.jpg");
+    this.load.image("bg", "images/bg3.jpeg");
     this.load.spritesheet("tilesheet", "images/sokoban_tilesheet.png", {
       frameWidth: 64,
     });
-    this.load.image("chicken", "images/chicken.png");
-    this.load.image("duck", "images/duck.png");
-    this.load.image("bear", "images/bear.png");
-    this.load.image("parrot", "images/parrot.png");
-    this.load.image("penguin", "images/penguin.png");
+    this.load.image("chicken", "images/1.png");
+    this.load.image("duck", "images/2.png");
+    this.load.image("bear", "images/3.png");
+    this.load.image("parrot", "images/4.png");
+    this.load.image("penguin", "images/5.png");
     this.load.image("play", "images/play.png");
     this.load.spritesheet("player", "images/retro.png", {
       frameWidth: 175.25,
       frameHeight: 255.75,
     });
+    this.load.audio("music", "music/tet.mp3");
   }
 
   create() {
-    this.add.image(this.halfWidth, 20, "bg").setScale(10);
+    this.add.image(this.Width, 140, "bg").setScale(2.5);
     this.boxGroup = this.physics.add.staticGroup();
     this.createBoxes();
     this.player = this.createPlayer();
@@ -140,6 +142,12 @@ export default class MemoryGameScene extends Phaser.Scene {
         align: "center",
       })
       .setText(String(this.countdownTimer));
+
+    this.backsound = this.sound.add("music", { volume: 0.008 });
+    var soundConfig = {
+      loop: true,
+    };
+    this.backsound.play(soundConfig, { volume: 0.008 });
   }
 
   createBoxes() {
@@ -162,9 +170,9 @@ export default class MemoryGameScene extends Phaser.Scene {
   createPlayer() {
     const player = this.physics.add
       .sprite(this.halfWidth, this.halfHeight, "player")
-      .setSize(40, 16)
+      .setSize(43.8125, 63.9375)
       .setScale(0.25, 0.25)
-      .setOffset(12, 38);
+      .setOffset(100, 100);
     player.setCollideWorldBounds(true);
     this.anims.create({
       key: "standby",
@@ -279,22 +287,27 @@ export default class MemoryGameScene extends Phaser.Scene {
       case 0:
         item = this.itemsGroup.get(box.x, box.y);
         item.setTexture("bear");
+
         break;
       case 1:
         item = this.itemsGroup.get(box.x, box.y);
         item.setTexture("chicken");
+
         break;
       case 2:
         item = this.itemsGroup.get(box.x, box.y);
         item.setTexture("duck");
+
         break;
       case 3:
         item = this.itemsGroup.get(box.x, box.y);
         item.setTexture("parrot");
+
         break;
       case 4:
         item = this.itemsGroup.get(box.x, box.y);
         item.setTexture("penguin");
+
         break;
     }
     if (!item) {
@@ -314,7 +327,7 @@ export default class MemoryGameScene extends Phaser.Scene {
       targets: item,
       y: "-=50",
       alpha: 1,
-      scale: 1,
+      scale: 0.15,
       duration: 500,
       onComplete: () => {
         if (itemType === 0) {
